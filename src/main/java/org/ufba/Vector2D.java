@@ -51,7 +51,7 @@ public class Vector2D {
 
     // Normalization
     public Vector2D normalize() {
-        if (x == 0 && y == 0) return this;
+        if (x == 0 && y == 0) return new Vector2D(0, 0);
         return new Vector2D(x / magnitude(), y / magnitude());
     }
 
