@@ -1,5 +1,7 @@
 package org.ufba;
 
+import java.util.Vector;
+
 public class Vector2D {
     private double x;
     private double y;
@@ -7,6 +9,11 @@ public class Vector2D {
     public Vector2D(double x, double y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Vector2D(Vector2D other) {
+        this.x = other.x;
+        this.y = other.y;
     }
 
     // Getters
