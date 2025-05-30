@@ -31,43 +31,62 @@ public class CelestialBody {
     public void setName(String name) {this.name = name;}
 }
 
-enum Bodies {
-    SUN("Sun", 0), 
-    MERCURY("Mercury", 88),   
-    VENUS("Venus", 225),      
-    EARTH("Earth", 365),      
-    MARS("Mars", 687),        
-    JUPITER("Jupiter", 4333), 
-    SATURN("Saturn", 10759),  
-    URANUS("Uranus", 30687),  
-    NEPTUNE("Neptune", 60190);
+// enum Bodies {
+//     SUN("Sun", 0, 0.0),
+//     MERCURY("Mercury", 88, 57.9),
+//     VENUS("Venus", 225, 108.2),
+//     EARTH("Earth", 365, 149.6),
+//     MARS("Mars", 687, 227.9),
+//     JUPITER("Jupiter", 4333, 778.5),
+//     SATURN("Saturn", 10759, 1433.5),
+//     URANUS("Uranus", 30687, 2872.5),
+//     NEPTUNE("Neptune", 60190, 4495.1);
 
-    private final String name;
-    private final double period;
+//     private final String name;
+//     private final double period; 
+//     private final double distanceToSun; // [10^6 Km]
 
-    private Bodies (String name, double period) {
-        this.name = name;
-        this.period = period;
-    }
+//     private Bodies(String name, double period, double distanceToSun) {
+//         this.name = name;
+//         this.period = period;
+//         this.distanceToSun = distanceToSun;
+//     }
 
-    public String getName() {
-        return name;
-    }
+//     public String getName() {
+//         return name;
+//     }
 
-    public double getPeriod() {
-        return period;
-    }
-}
+//     public double getPeriod() { // Getter renomeado
+//         return period;
+//     }
+
+//     public double getDistanceToSun() { // Getter para o novo campo
+//         return distanceToSun;
+//     }
+// }
 
 class Sun extends CelestialBody {
     public Sun(double mass, Vector2D position, Vector2D velocity) {
-        super(Bodies.SUN.getName(), mass, position, velocity);
+        super("Sun", mass, position, velocity);
     }
 }
 
 class Planets extends CelestialBody {
-    public Planets(String name, double mass, Vector2D position, Vector2D velocity) {
+    private double distanceFromSun;
+    private int orbitalPeriod;
+
+    public Planets(String name, double distanceFromSun, int orbitalPeriod, double mass, Vector2D position, Vector2D velocity) {
         super(name, mass, position, velocity);
+        this.distanceFromSun = distanceFromSun;
+        this.orbitalPeriod = orbitalPeriod;
+    }
+
+    public double getDistanceToSun () {
+        return distanceFromSun;
+    }
+
+    public int getOrbitalPeriod () {
+        return orbitalPeriod;
     }
 }
 
