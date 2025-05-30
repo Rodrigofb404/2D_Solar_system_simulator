@@ -1,7 +1,6 @@
 package org.ufba;
 
 import java.awt.Color;
-
 import javax.swing.*;
 
 public class Main {
@@ -15,24 +14,28 @@ public class Main {
         // Create two different panels 
         JPanel galaxy = new JPanel();
         galaxy.setBackground(Color.BLACK);
-        galaxy.add(new JLabel("Galaxy where planets will be"));
+        galaxy.add(new JLabel("Planets will be here"));
         
         JPanel controls = new JPanel();
         controls.setBackground(Color.GRAY);
-        controls.add(new JLabel("Galaxy controllers"));
+        controls.add(new JLabel("controls will be here"));
         
         frame.add(galaxy);
         frame.add(controls);
-        
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, galaxy, controls);
-        
+
+        // Calculate the divider location
         int frameWidth = frame.getWidth();
-        int galaxyWidth = (int) (0.7 * frameWidth);
-        // int controlsWidth = (int) (0.3 * frameWidth);
+        int galaxyWidth = (int) (0.85 * frameWidth);
         
+        // Create a component that will be used to split the window 
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, galaxy, controls);
+
+        // Configure the divider
+        splitPane.setDividerSize(8);
         splitPane.setDividerLocation(galaxyWidth);
+        splitPane.setResizeWeight(0.85); // When resized, 85% of the space go to galaxy and 15% to controls
         
-        // splitPane.setResizeWeight(0.7);
+        splitPane.setOneTouchExpandable(true);
 
         frame.add(splitPane);
         
