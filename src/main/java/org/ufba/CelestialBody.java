@@ -8,8 +8,9 @@ public class CelestialBody {
     private Vector2D acceleration; 
 
     public CelestialBody(String name, double mass, Vector2D position, Vector2D velocity) {
-        this.name = name;
         if (mass <= 0) throw new IllegalArgumentException("Mass must be greater than zero");
+        
+        this.name = name;
         this.mass = mass; 
         this.position = position;
         this.velocity = velocity;
@@ -31,24 +32,30 @@ public class CelestialBody {
 }
 
 enum Bodies {
-    SUN("Sun"),
-    MERCURY("Mercury"),
-    VENUS("Venus"),
-    EARTH("Earth"),
-    MARS("Mars"),
-    JUPITER("Jupiter"),
-    SATURN("Saturn"),
-    URANUS("Uranus"),
-    NEPTUNE("Neptune");
+    SUN("Sun", 0), 
+    MERCURY("Mercury", 88),   
+    VENUS("Venus", 225),      
+    EARTH("Earth", 365),      
+    MARS("Mars", 687),        
+    JUPITER("Jupiter", 4333), 
+    SATURN("Saturn", 10759),  
+    URANUS("Uranus", 30687),  
+    NEPTUNE("Neptune", 60190);
 
     private final String name;
+    private final double period;
 
-    private Bodies (String name) {
+    private Bodies (String name, double period) {
         this.name = name;
+        this.period = period;
     }
 
     public String getName() {
         return name;
+    }
+
+    public double getPeriod() {
+        return period;
     }
 }
 
