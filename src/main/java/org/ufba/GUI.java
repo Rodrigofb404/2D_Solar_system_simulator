@@ -12,6 +12,9 @@ public class GUI extends JPanel {
         
     static class Galaxy extends JPanel {
 
+        // TODO: trocar pelo celestial body ou tornar essa o celestial body
+        // ANALISAR: Talvez trocar o vetor de posição para 2 variáveis escalares individuais de posição (x e y) 
+        //           seja mais simples do que lidar com o vetor.
         class Bodies {
             int x, y, radius;
             Color color;
