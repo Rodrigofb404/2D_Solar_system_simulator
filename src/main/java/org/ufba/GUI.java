@@ -70,8 +70,8 @@ public class GUI extends JPanel {
         public Controls() {
             setBackground(Color.LIGHT_GRAY);
             add(new JLabel("controls will be here"));
-            JSlider ChangeWeight = new JSlider();
-            add(ChangeWeight);
+            JSlider ChangeWeightSlider = new JSlider(); // Creates slider
+            add(ChangeWeightSlider);
         } 
     }
 
