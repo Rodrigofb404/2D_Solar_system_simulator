@@ -12,9 +12,12 @@ public class GUI extends JPanel {
         
     static class Galaxy extends JPanel {
 
-        // TODO: trocar pelo celestial body ou tornar essa o celestial body
-        // ANALISAR: Talvez trocar o vetor de posição para 2 variáveis escalares individuais de posição (x e y) 
-        //           seja mais simples do que lidar com o vetor.
+        // TODO 1: trocar pelo celestial body ou tornar essa o celestial body
+        // TODO 2: Verificar como utilizar o TIMER do Java Swing (ele provavelmente será o responsável por atualizar a tela)
+        // TODO 3: Definir quais parâmetros poderão ser alterados no simulador (Acho que vi algo parecido na internet, dá para usar de inspiração)
+        // TODO 4: ("Opcional"): Se os parâmetros mudarem, decidir como será feita a seleção de qual planeta receberá as mudanças
+        // TODO 5: Se confirmar o uso do TIMER, descobrir como aplicar a física aos planetas e ligar isso à taxa de atualização do TIMER 
+        // ANALISAR: Talvez trocar o vetor de posição para 2 variáveis escalares individuais de posição (x e y) seja mais simples do que lidar com o vetor.
         class Bodies {
             int x, y, radius;
             Color color;
@@ -31,6 +34,8 @@ public class GUI extends JPanel {
 
         public Galaxy() {
             setBackground(Color.BLACK);
+            setLayout(null);
+            add(new JLabel("Planets will be here"));
             solarSystem.add(new Bodies(-sunRadius, -sunRadius, 40, Color.YELLOW));  // Sol
 
             solarSystem.add(new Bodies(70, 0, 8, new Color(169, 169, 169)));   // Mercury
@@ -59,6 +64,17 @@ public class GUI extends JPanel {
         }  
     }
 
+
+    static class Controls extends JPanel {
+
+        public Controls() {
+            setBackground(Color.LIGHT_GRAY);
+            add(new JLabel("controls will be here"));
+            JSlider ChangeWeight = new JSlider();
+            add(ChangeWeight);
+        } 
+    }
+
     static public void createGUI() {
         
         // Creates the frame, the super class
@@ -67,30 +83,26 @@ public class GUI extends JPanel {
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        // Creates the galaxy panel
-        Galaxy galaxy = new Galaxy();
-        galaxy.setLayout(null);
-        galaxy.add(new JLabel("Planets will be here"));
-
-        // Creates controls panel 
-        Controls controls = new Controls();
-        controls.setBackground(Color.GRAY);
-        controls.add(new JLabel("controls will be here"));
-        
-        // Creates a component that will be used to split the window 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, galaxy, controls);
-        
-        frame.add(splitPane);
-        frame.setVisible(true);
-        
-        // Configures the divider
-        splitPane.setDividerSize(5);
-        splitPane.setResizeWeight(proportion); // When resized, 85% of the space go to galaxy and 15% to controls
-        
-        splitPane.setEnabled(false);           // Disable interaction with the splitPlane
-        
-        // These commands are executed only after the frame get visible
+        // These commands are executed only after the frame gets visible
         SwingUtilities.invokeLater(() -> {
+
+            // Creates the galaxy panel
+            Galaxy galaxy = new Galaxy();
+    
+            // Creates controls panel 
+            Controls controls = new Controls();
+            
+            // Creates a component that will be used to split the window 
+            JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, galaxy, controls);
+            
+            frame.add(splitPane);
+            frame.setVisible(true);
+            
+            // Configures the divider
+            splitPane.setDividerSize(5);
+            splitPane.setResizeWeight(proportion); // When resized, 85% of the space go to galaxy and 15% to controls
+            
+            splitPane.setEnabled(false);           // Disable interaction with the splitPlane
             int frameWidth = frame.getWidth();
             int frameHeight = frame.getHeight();
             int galaxyWidth = (int) (proportion * frameWidth);
