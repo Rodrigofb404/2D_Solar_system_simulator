@@ -72,17 +72,12 @@ class Sun extends CelestialBody {
 }
 
 class Planets extends CelestialBody {
-    private double distanceFromSun;
+    // private double distanceFromSun;
     private int orbitalPeriod;
 
-    public Planets(String name, double distanceFromSun, int orbitalPeriod, double mass, Vector2D position, Vector2D velocity) {
+    public Planets(String name, int orbitalPeriod, double mass, Vector2D position, Vector2D velocity) {
         super(name, mass, position, velocity);
-        this.distanceFromSun = distanceFromSun;
         this.orbitalPeriod = orbitalPeriod;
-    }
-
-    public double getDistanceToSun () {
-        return distanceFromSun;
     }
 
     public int getOrbitalPeriod () {
