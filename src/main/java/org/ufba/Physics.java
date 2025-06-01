@@ -30,13 +30,12 @@ public class Physics {
     }
     
     public static Vector2D totalForce(CelestialBody body, Sun sun, double period) {
-        Vector2D gravitationalForce = gravitationalForce(body, sun); 
-        Vector2D centrifugalForce = centrifugalForce(body, sun, period);
-        
-        Vector2D totalForce = gravitationalForce.add(centrifugalForce);
+    Vector2D gravitationalForce = gravitationalForce(body, sun); 
+    Vector2D centrifugalForce = centrifugalForce(body, sun, period);
+    
+    return gravitationalForce.add(centrifugalForce);
+}
 
-        return totalForce;  
-    } 
 
     public static void updateBody(Planets body, Vector2D totalForce, double deltaTime) {
         // newAcceleration = Force / mass

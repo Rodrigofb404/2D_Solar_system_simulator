@@ -1,9 +1,24 @@
-package org.ufba;
+        // TODO 1: trocar pelo celestial body ou tornar essa o celestial body
+        //OK! TODO 2: Verificar como utilizar o TIMER do Java Swing (ele provavelmente será o responsável por atualizar a tela) 
+        // TODO 3: Definir quais parâmetros poderão ser alterados no simulador (Acho que vi algo parecido na internet, dá para usar de inspiração)
+        // TODO 4: ("Opcional"): Se os parâmetros mudarem, decidir como será feita a seleção de qual planeta receberá as mudanças
+        // TODO 5: Se confirmar o uso do TIMER, descobrir como aplicar a física aos planetas e ligar isso à taxa de atualização do TIMER 
+        //OK! ANALISAR: Talvez trocar o vetor de posição para 2 variáveis escalares individuais de posição (x e y) seja mais simples do que lidar com o vetor.
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
-import java.util.ArrayList;
+package org.ufba;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 public class GUI extends JPanel {
     static private int galaxyCenterX, galaxyCenterY;
@@ -11,58 +26,75 @@ public class GUI extends JPanel {
     static private final int sunRadius = 40;  
         
     static class Galaxy extends JPanel {
+    private SolarSystem<CelestialBody> system;
+    private Sun sun;
 
-        // TODO 1: trocar pelo celestial body ou tornar essa o celestial body
-        // TODO 2: Verificar como utilizar o TIMER do Java Swing (ele provavelmente será o responsável por atualizar a tela)
-        // TODO 3: Definir quais parâmetros poderão ser alterados no simulador (Acho que vi algo parecido na internet, dá para usar de inspiração)
-        // TODO 4: ("Opcional"): Se os parâmetros mudarem, decidir como será feita a seleção de qual planeta receberá as mudanças
-        // TODO 5: Se confirmar o uso do TIMER, descobrir como aplicar a física aos planetas e ligar isso à taxa de atualização do TIMER 
-        // ANALISAR: Talvez trocar o vetor de posição para 2 variáveis escalares individuais de posição (x e y) seja mais simples do que lidar com o vetor.
-        class Bodies {
-            int x, y, radius;
-            Color color;
+    private final double deltaTime = 60 * 60 * 24; // 1 dia em segundos
 
-            public Bodies(int x, int y, int radius, Color color) {
-                this.x = x;
-                this.y = y;
-                this.radius = radius;
-                this.color = color;
+    Galaxy(SolarSystem<CelestialBody> system1, Sun sun) {
+        this.system = system1;
+        this.sun = sun;
+        setBackground(Color.BLACK);
+
+        // Timer de atualização a cada 50ms (~20 FPS)
+        Timer timer = new Timer(50, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updatePhysics(); // Atualiza posições
+                repaint();       
             }
-        }
-
-        private List<Bodies> solarSystem = new ArrayList<>();
-
-        public Galaxy() {
-            setBackground(Color.BLACK);
-            setLayout(null);
-            add(new JLabel("Planets will be here"));
-            solarSystem.add(new Bodies(-sunRadius, -sunRadius, 40, Color.YELLOW));  // Sol
-
-            solarSystem.add(new Bodies(70, 0, 8, new Color(169, 169, 169)));   // Mercury
-            solarSystem.add(new Bodies(110, 0, 12, new Color(255, 215, 0)));   // Venus
-            solarSystem.add(new Bodies(150, 0, 12, new Color(0, 191, 255)));   // Earth
-            solarSystem.add(new Bodies(190, 0, 10, new Color(255, 69, 0)));    // Mars
-            solarSystem.add(new Bodies(260, 0, 22, new Color(255, 165, 0)));   // Jupiter
-            solarSystem.add(new Bodies(330, 0, 18, new Color(210, 180, 140))); // Saturn
-            solarSystem.add(new Bodies(390, 0, 16, new Color(173, 216, 230))); // Uranus
-            solarSystem.add(new Bodies(450, 0, 16, new Color(0, 0, 139)));     // Neptune
-        }
-        
-        @Override
-        protected void paintComponent(Graphics g) {
-            // Clean panel
-            super.paintComponent(g);                    
-            
-            // Move the origin to the middle of the frame
-            g.translate(galaxyCenterX, galaxyCenterY); 
-            
-            // iterates over the bodies and paint the bodies
-            for(Bodies bodies : solarSystem) {
-                g.setColor(bodies.color);
-                g.fillOval(bodies.x, bodies.y, bodies.radius * 2, bodies.radius * 2);
-            }
-        }  
+        });
+        timer.start();
     }
+
+    private void updatePhysics() {
+        for (CelestialBody body : system.getBodies()) {
+            if (body instanceof Planets) {
+                Planets planet = (Planets) body;
+                Vector2D force = Physics.gravitationalForce(planet, sun);
+                Physics.updateBody(planet, force, deltaTime);
+            }
+        }
+    }
+
+        @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.YELLOW);
+
+        int sunX = galaxyCenterX - sunRadius / 2;
+        int sunY = galaxyCenterY - sunRadius / 2;
+        g2d.fillOval(sunX, sunY, sunRadius, sunRadius);
+
+        for (CelestialBody body : system.getBodies()) {
+            Vector2D pos = body.getPosition();
+            Vector2D relativePos = pos.sub(sun.getPosition());
+
+            double distReal = relativePos.magnitude();
+            double distVisual = Math.sqrt(distReal);
+
+            Vector2D direction = relativePos.normalize();
+            Vector2D posVisual = direction.multiply(distVisual);
+
+            double scale = 3e-4; // Ajuste para caber na tela
+
+            int x = (int) (galaxyCenterX + posVisual.getX() * scale);
+            int y = (int) (galaxyCenterY + posVisual.getY() * scale);
+
+            if (body instanceof Planets) {
+                g2d.setColor(((Planets) body).getColor());
+            } else {
+                g2d.setColor(Color.WHITE);
+            }
+
+            g2d.fillOval(x - 5, y - 5, 10, 10);
+        }
+    }
+
+    }
+
 
 
     static class Controls extends JPanel {
@@ -70,50 +102,37 @@ public class GUI extends JPanel {
         public Controls() {
             setBackground(Color.LIGHT_GRAY);
             add(new JLabel("controls will be here"));
-            JSlider ChangeWeightSlider = new JSlider(); // Creates slider
+            JSlider ChangeWeightSlider = new JSlider();
             add(ChangeWeightSlider);
         } 
     }
 
-    static public void createGUI() {
-        
-        // Creates the frame, the super class
-        JFrame frame = new JFrame("Teste");
-        frame.setTitle("2D Solar System Simulator");
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        // These commands are executed only after the frame gets visible
-        SwingUtilities.invokeLater(() -> {
+    public static void createGUI(SolarSystem system, Sun sun) {
+    JFrame frame = new JFrame("2D Solar System Simulator");
+    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            // Creates the galaxy panel
-            Galaxy galaxy = new Galaxy();
-    
-            // Creates controls panel 
-            Controls controls = new Controls();
-            
-            // Creates a component that will be used to split the window 
-            JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, galaxy, controls);
-            
-            frame.add(splitPane);
-            frame.setVisible(true);
-            
-            // Configures the divider
-            splitPane.setDividerSize(5);
-            splitPane.setResizeWeight(proportion); // When resized, 85% of the space go to galaxy and 15% to controls
-            
-            splitPane.setEnabled(false);           // Disable interaction with the splitPlane
-            int frameWidth = frame.getWidth();
-            int frameHeight = frame.getHeight();
-            int galaxyWidth = (int) (proportion * frameWidth);
-            
-            // Centers of the galaxy panel
-            galaxyCenterX = galaxyWidth / 2;
-            galaxyCenterY = frameHeight / 2;
+    SwingUtilities.invokeLater(() -> {
+        Galaxy galaxy = new Galaxy(system, sun);
+        Controls controls = new Controls();
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, galaxy, controls);
 
+        frame.add(splitPane);
+        frame.setVisible(true);
 
-            splitPane.setDividerLocation(galaxyWidth);
-        });
-    }
+        splitPane.setDividerSize(5);
+        splitPane.setResizeWeight(proportion);
+        splitPane.setEnabled(false);
+        int frameWidth = frame.getWidth();
+        int frameHeight = frame.getHeight();
+        int galaxyWidth = (int) (proportion * frameWidth);
+
+        galaxyCenterX = galaxyWidth / 2;
+        galaxyCenterY = frameHeight / 2;
+
+        splitPane.setDividerLocation(galaxyWidth);
+    });
+}
+
     
 }
