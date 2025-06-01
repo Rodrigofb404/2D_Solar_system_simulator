@@ -1,7 +1,7 @@
 package org.ufba;
 
 public class Vector2D {
-    private double x;
+    double x;
     private double y;
 
     public Vector2D(double x, double y) {

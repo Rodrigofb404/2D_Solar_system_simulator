@@ -21,9 +21,4 @@ public class SolarSystem<bodies> {
         return bodies;
     }
 
-
-
-
-
-
 }

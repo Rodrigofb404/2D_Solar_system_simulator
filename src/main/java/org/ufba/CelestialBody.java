@@ -1,13 +1,15 @@
 package org.ufba;
 
+import java.awt.Color;
+
 public class CelestialBody {
-    private String name;
+    String name;
     private double mass;
     private Vector2D position;
     private Vector2D velocity;
     private Vector2D acceleration; 
 
-    public CelestialBody(String name, double mass, Vector2D position, Vector2D velocity) {
+    public CelestialBody(String name, double mass, double par1, Vector2D position, Vector2D velocity) {
         if (mass <= 0) throw new IllegalArgumentException("Mass must be greater than zero");
         
         this.name = name;
@@ -67,7 +69,7 @@ public class CelestialBody {
 
 class Sun extends CelestialBody {
     public Sun(double mass, Vector2D position, Vector2D velocity) {
-        super("Sun", mass, position, velocity);
+        super("Sun", mass, 6.9634E8, position, velocity);
     }
 }
 
@@ -75,11 +77,18 @@ class Planets extends CelestialBody {
     // private double distanceFromSun;
     private int orbitalPeriod;
 
-    public Planets(String name, int orbitalPeriod, double mass, Vector2D position, Vector2D velocity) {
-        super(name, mass, position, velocity);
-        this.orbitalPeriod = orbitalPeriod;
-    }
+    private Color color;
 
+    public Planets(String name, int orbitalPeriod, double mass, Vector2D position, Vector2D velocity, Color color) {
+        super(name, mass, 6.9634E8, position, velocity);
+        this.name = name;
+        this.orbitalPeriod = orbitalPeriod;
+        this.color = color;
+        }   
+
+        public Color getColor() {
+            return color;
+        }
     public int getOrbitalPeriod () {
         return orbitalPeriod;
     }
