@@ -11,6 +11,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -48,10 +50,34 @@ public class GUI extends JPanel {
     }
 
     private void updatePhysics() {
+
+        // HashMap with key (Planet) and value (Force)
+        Map<CelestialBody, Vector2D> totalForce = new HashMap<>();
+
+        // Loop with all bodies to calculate total force
+        for (CelestialBody bodyA : system.getBodies()) {
+            Vector2D totalForceBodyA = new Vector2D(0, 0);
+
+            // Gravitational force for Sun on BodyA
+            totalForceBodyA = totalForceBodyA.add(Physics.gravitationalForce(bodyA, sun));
+
+            // Loop with all bodies (except bodyA) to calculate total force on BodyA
+            for (CelestialBody bodyB : system.getBodies()) {
+                if (bodyB != bodyA) {
+                    totalForceBodyA = totalForceBodyA.add(Physics.gravitationalForce(bodyA, bodyB));
+
+                }
+            }
+            // Add totalForceBodyA to HashMap with key (Planet bodyA) and value (Force)
+            totalForce.put(bodyA, totalForceBodyA);
+        }
+
+        // Loop with all bodies to update their physics
         for (CelestialBody body : system.getBodies()) {
             if (body instanceof Planets) {
                 Planets planet = (Planets) body;
-                Vector2D force = Physics.gravitationalForce(planet, sun);
+
+                Vector2D force = totalForce.get(body);
                 Physics.updateBody(planet, force, deltaTime);
             }
         }

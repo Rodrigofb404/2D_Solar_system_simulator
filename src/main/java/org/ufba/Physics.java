@@ -4,37 +4,38 @@ public class Physics {
     public static final double G = 6.67e-11;
 
     // Force exerted by particle B on particle A
-    public static Vector2D gravitationalForce(CelestialBody body, Sun sun) {
-        if (body.getPosition().equals(sun.getPosition())) return new Vector2D(0, 0);
+    public static Vector2D gravitationalForce(CelestialBody bodyA, CelestialBody bodyB) {
+        if (bodyA.getPosition().equals(bodyB.getPosition())) return new Vector2D(0, 0);
 
-        double distance = body.getPosition().euclideanDistance(sun.getPosition());
-        double magnitudeForce = G * (body.getMass() * sun.getMass()) / (distance * distance);
+        double distance = bodyA.getPosition().euclideanDistance(bodyB.getPosition());
+        double magnitudeForce = G * (bodyA.getMass() * bodyB.getMass()) / (distance * distance);
 
         // Points from A to B (vector normalized)
-        Vector2D direction = sun.getPosition().sub(body.getPosition()).normalize();
+        Vector2D direction = bodyB.getPosition().sub(bodyA.getPosition()).normalize();
 
         // Force = direction * magnitudeForce
         return direction.multiply(magnitudeForce);
     }
 
-    public static Vector2D centrifugalForce(CelestialBody body, Sun sun, double period) {
-        if (period == 0) throw new IllegalArgumentException("The period can't be 0");
-
-        double distance = body.getPosition().euclideanDistance(sun.getPosition());
-        double angularVelocity = (2 * Math.PI) / period;
-        double mass = body.getMass();
-
-        Vector2D direction = body.getPosition().sub(sun.getPosition()).normalize().multiply(-1);
-
-        return direction.multiply(mass * Math.pow(angularVelocity, 2) * distance);
-    }
+//    public static Vector2D centrifugalForce(CelestialBody body, Sun sun, double period) {
+//        if (period == 0) throw new IllegalArgumentException("The period can't be 0");
+//        double periodSeconds = period * 24 * 60 * 60; // Convert days to seconds
+//
+//        double distance = body.getPosition().euclideanDistance(sun.getPosition());
+//        double angularVelocity = (2 * Math.PI) / periodSeconds;
+//        double mass = body.getMass();
+//
+//        Vector2D direction = body.getPosition().sub(sun.getPosition()).normalize();
+//
+//        return direction.multiply(mass * Math.pow(angularVelocity, 2) * distance);
+//    }
     
-    public static Vector2D totalForce(CelestialBody body, Sun sun, double period) {
-    Vector2D gravitationalForce = gravitationalForce(body, sun); 
-    Vector2D centrifugalForce = centrifugalForce(body, sun, period);
-    
-    return gravitationalForce.add(centrifugalForce);
-}
+//    public static Vector2D totalForce(CelestialBody body, Sun sun, double period) {
+//    Vector2D gravitationalForce = gravitationalForce(body, sun);
+//    Vector2D centrifugalForce = centrifugalForce(body, sun, period);
+//
+//    return gravitationalForce.add(centrifugalForce);
+//}
 
 
     public static void updateBody(Planets body, Vector2D totalForce, double deltaTime) {
