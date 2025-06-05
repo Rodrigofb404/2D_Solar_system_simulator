@@ -3,22 +3,18 @@ package org.ufba;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SolarSystem<bodies> {
-    private List<CelestialBody> bodies;
-    private Physics physics;
+public class SolarSystem {
+    private List<CelestialBody> bodies; // DECLARAR COMO CELESTIAL BODY PARA PODER ADICIONAR TANTO O SOL COMO PLANETAS
 
     public SolarSystem() {
-        this.bodies = new ArrayList<>();
-        this.physics = new Physics();
+        bodies = new ArrayList<>();
     }
 
-
-    public void addbody(CelestialBody body) {
+    public void addBody(CelestialBody body) {
         bodies.add(body);
     }
 
     public List<CelestialBody> getBodies() {
-        return bodies;
+        return new ArrayList<>(bodies); // return a copy
     }
-
 }
