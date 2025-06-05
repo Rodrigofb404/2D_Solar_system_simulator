@@ -17,27 +17,7 @@ public class Physics {
         return direction.multiply(magnitudeForce);
     }
 
-    public static Vector2D centrifugalForce(CelestialBody body, Sun sun, double period) {
-        if (period == 0) throw new IllegalArgumentException("The period can't be 0");
-
-        double distance = body.getPosition().euclideanDistance(sun.getPosition());
-        double angularVelocity = (2 * Math.PI) / period;
-        double mass = body.getMass();
-
-        Vector2D direction = body.getPosition().sub(sun.getPosition()).normalize().multiply(-1);
-
-        return direction.multiply(mass * Math.pow(angularVelocity, 2) * distance);
-    }
-    
-    public static Vector2D totalForce(CelestialBody body, Sun sun, double period) {
-    Vector2D gravitationalForce = gravitationalForce(body, sun); 
-    Vector2D centrifugalForce = centrifugalForce(body, sun, period);
-    
-    return gravitationalForce.add(centrifugalForce);
-}
-
-
-    public static void updateBody(Planets body, Vector2D totalForce, double deltaTime) {
+    public static void updateBody(Planet body, Vector2D totalForce, double deltaTime) {
         // newAcceleration = Force / mass
         Vector2D newAcceleration = totalForce.divide(body.getMass());
 
