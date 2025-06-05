@@ -21,118 +21,44 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class GUI extends JPanel {
-    static private int galaxyCenterX, galaxyCenterY;
-    static private final double proportion = 0.85;
-    static private final int sunRadius = 40;  
-        
-    static class Galaxy extends JPanel {
-    private SolarSystem<CelestialBody> system;
-    private Sun sun;
+    static private double galaxyCenterX, galaxyCenterY;
+    private JFrame frame;
 
-    private final double deltaTime = 60 * 60 * 24; // 1 dia em segundos
-
-    Galaxy(SolarSystem<CelestialBody> system1, Sun sun) {
-        this.system = system1;
-        this.sun = sun;
-        setBackground(Color.BLACK);
-
-        // Timer de atualização a cada 50ms (~20 FPS)
-        Timer timer = new Timer(50, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updatePhysics(); // Atualiza posições
-                repaint();       
-            }
-        });
-        timer.start();
+    public GUI(SolarSystem solarSystem) {
+        configFrame();
+        calcFrameParameters();
+        Galaxy galaxy = new Galaxy(solarSystem);
+        frame.add(galaxy);
     }
 
-    private void updatePhysics() {
-        for (CelestialBody body : system.getBodies()) {
-            if (body instanceof Planets) {
-                Planets planet = (Planets) body;
-                Vector2D force = Physics.gravitationalForce(planet, sun);
-                Physics.updateBody(planet, force, deltaTime);
-            }
-        }
-    }
-
-        @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.YELLOW);
-
-        int sunX = galaxyCenterX - sunRadius / 2;
-        int sunY = galaxyCenterY - sunRadius / 2;
-        g2d.fillOval(sunX, sunY, sunRadius, sunRadius);
-
-        for (CelestialBody body : system.getBodies()) {
-            Vector2D pos = body.getPosition();
-            Vector2D relativePos = pos.sub(sun.getPosition());
-
-            double distReal = relativePos.magnitude();
-            double distVisual = Math.sqrt(distReal);
-
-            Vector2D direction = relativePos.normalize();
-            Vector2D posVisual = direction.multiply(distVisual);
-
-            double scale = 3e-4; // Ajuste para caber na tela
-
-            int x = (int) (galaxyCenterX + posVisual.getX() * scale);
-            int y = (int) (galaxyCenterY + posVisual.getY() * scale);
-
-            if (body instanceof Planets) {
-                g2d.setColor(((Planets) body).getColor());
-            } else {
-                g2d.setColor(Color.WHITE);
-            }
-
-            g2d.fillOval(x - 5, y - 5, 10, 10);
-        }
-    }
+    // Configures the frame's initial state
+    public void configFrame() {
+        frame = new JFrame("2D Solar System Simulator");
+        // frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setSize(1150, 650);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLocationRelativeTo(null); // Initialize the frame centralized on the screen
 
     }
-
-
-
-    static class Controls extends JPanel {
-
-        public Controls() {
-            setBackground(Color.LIGHT_GRAY);
-            add(new JLabel("controls will be here"));
-            JSlider ChangeWeightSlider = new JSlider();
-            add(ChangeWeightSlider);
-        } 
-    }
-
-    public static void createGUI(SolarSystem system, Sun sun) {
-    JFrame frame = new JFrame("2D Solar System Simulator");
-    frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-    SwingUtilities.invokeLater(() -> {
-        Galaxy galaxy = new Galaxy(system, sun);
-        Controls controls = new Controls();
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, galaxy, controls);
-
-        frame.add(splitPane);
-        frame.setVisible(true);
-
-        splitPane.setDividerSize(5);
-        splitPane.setResizeWeight(proportion);
-        splitPane.setEnabled(false);
+    
+    // Calculates useful frame's parameters
+    public void calcFrameParameters() {
         int frameWidth = frame.getWidth();
         int frameHeight = frame.getHeight();
-        int galaxyWidth = (int) (proportion * frameWidth);
 
-        galaxyCenterX = galaxyWidth / 2;
+        galaxyCenterX = frameWidth / 2;
         galaxyCenterY = frameHeight / 2;
+    }
 
-        splitPane.setDividerLocation(galaxyWidth);
-    });
-}
+    // Shows the GUI on screen
+    public void openGUI() {
+        frame.setVisible(true);
+    }
 
-    
+    // Gets the galaxy center coordinates
+    static public Vector2D getGalaxyCenter() {
+        Vector2D galaxyCenter = new Vector2D(galaxyCenterX, galaxyCenterY);
+
+        return galaxyCenter; 
+    }
 }
