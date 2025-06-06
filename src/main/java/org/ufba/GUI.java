@@ -27,7 +27,9 @@ public class GUI extends JPanel {
     public GUI(SolarSystem solarSystem) {
         configFrame();
         calcFrameParameters();
+        Control control = new Control();
         Galaxy galaxy = new Galaxy(solarSystem);
+        galaxy.add(control);
         frame.add(galaxy);
     }
 
