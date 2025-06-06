@@ -5,11 +5,10 @@ import java.awt.Color;
 public class Main {
     public static void main(String[] args) {
 
-        SolarSystem solarSystem = new SolarSystem();
+        Star sun = new Star("sun", 1.989e30, 5.778e3, new Vector2D(0, 0), new Vector2D(0, 0));
+        PlanetarySystem solarSystem = new PlanetarySystem(sun);
         
-        // This array will have instances of the sun and the planets
-        CelestialBody[] celestialBodies = new CelestialBody[] {
-             new Sun(1.989e30, new Vector2D(0, 0), new Vector2D(0, 0)), // The sun must be at index 0
+        Planet[] planets = new Planet[] {
              new Planet("Mercury", 88, 3.30e23, new Vector2D(57.9e9, 0), new Vector2D(0, 47.87e3), Color.GRAY),
              new Planet("Venus", 225, 4.87e24, new Vector2D(108.2e9, 0), new Vector2D(0, 35.02e3), new Color(218, 165, 32)),
              new Planet("Earth", 365, 5.97e24, new Vector2D(149.6e9, 0), new Vector2D(0, 29.78e3), Color.BLUE),
@@ -20,8 +19,8 @@ public class Main {
              new Planet("Neptune", 60190, 1.02e26, new Vector2D(4495.1e9, 0), new Vector2D(0, 5.43e3), new Color(25, 25, 112))
         };
         
-        for (CelestialBody body : celestialBodies) {
-            solarSystem.addBody(body);
+        for (Planet planet : planets) {
+            solarSystem.addBody(planet);
         }   
 
         GUI gui = new GUI(solarSystem);

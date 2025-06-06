@@ -4,7 +4,7 @@ public class Physics {
     public static final double G = 6.67e-11;
 
     // Force exerted by particle B on particle A
-    public static Vector2D gravitationalForce(CelestialBody body, Sun sun) {
+    public static Vector2D gravitationalForce(Planet body, Star sun) {
         if (body.getPosition().equals(sun.getPosition())) return new Vector2D(0, 0);
 
         double distance = body.getPosition().euclideanDistance(sun.getPosition());

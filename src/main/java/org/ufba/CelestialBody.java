@@ -9,7 +9,7 @@ public class CelestialBody {
     private Vector2D velocity;
     private Vector2D acceleration; 
 
-    public CelestialBody(String name, double mass, double par1, Vector2D position, Vector2D velocity) {
+    public CelestialBody(String name, double mass, Vector2D position, Vector2D velocity) {
         if (mass <= 0) throw new IllegalArgumentException("Mass must be greater than zero");
         
         this.name = name;
