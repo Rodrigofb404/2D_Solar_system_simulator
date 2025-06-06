@@ -3,7 +3,7 @@ package org.ufba;
 import java.awt.Color;
 
 public class Star extends CelestialBody {
-    private double temperature; 
+    private double temperature; // [K] 
     private Color color;
 
     public Star(String name, double mass, double temperature, Vector2D position, Vector2D velocity) {

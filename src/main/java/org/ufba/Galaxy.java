@@ -16,7 +16,7 @@ public class Galaxy extends JPanel {
     static private final int sunRadius = 35;
     private final int galaxyCenterX = (int) (GUI.getGalaxyCenter().getX());
     private final int galaxyCenterY = (int) (GUI.getGalaxyCenter().getY());
-    private final double deltaTime = 60 * 60 * 24; // 1 dia em segundos
+    private final double deltaTime = 60 * 60 * 24; // 1 day in seconds
 
 
     public Galaxy(PlanetarySystem planetarySystem) {
@@ -24,11 +24,11 @@ public class Galaxy extends JPanel {
         this.sun = planetarySystem.getStar();
         setBackground(Color.BLACK);
 
-        // Timer de atualização a cada 33ms (~30 FPS)
+        // Update time each 33ms (~30 FPS)
         Timer timer = new Timer(33, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updatePhysics(); // Atualiza posições
+                updatePhysics(); // Update positions
                 repaint();       
             }
         });
@@ -62,7 +62,7 @@ public class Galaxy extends JPanel {
             Vector2D direction = relativePos.normalize();
             Vector2D posVisual = direction.multiply(distVisual);
 
-            double scale = 2.5e-4; // Ajuste para caber na tela
+            double scale = 2.5e-4; // Adjust to fit on the frame
 
             int x = (int) (posVisual.getX() * scale);
             int y = (int) (posVisual.getY() * scale);
