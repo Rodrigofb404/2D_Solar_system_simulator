@@ -8,7 +8,7 @@ public class Planet extends CelestialBody {
     private Color color;
 
     public Planet(String name, int orbitalPeriod, double mass, Vector2D position, Vector2D velocity, Color color) {
-        super(name, mass, 6.9634E8, position, velocity);
+        super(name, mass, position, velocity);
         this.name = name;
         this.orbitalPeriod = orbitalPeriod;
         this.color = color;
@@ -17,7 +17,8 @@ public class Planet extends CelestialBody {
         public Color getColor() {
             return color;
         }
-    public int getOrbitalPeriod () {
-        return orbitalPeriod;
-    }
+        
+        public int getOrbitalPeriod () {
+            return orbitalPeriod;
+        }
 }

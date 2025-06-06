@@ -24,11 +24,11 @@ public class GUI extends JPanel {
     static private double galaxyCenterX, galaxyCenterY;
     private JFrame frame;
 
-    public GUI(SolarSystem solarSystem) {
+    public GUI(PlanetarySystem planetarySystem) {
         configFrame();
         calcFrameParameters();
         Control control = new Control();
-        Galaxy galaxy = new Galaxy(solarSystem);
+        Galaxy galaxy = new Galaxy(planetarySystem);
         galaxy.add(control);
         frame.add(galaxy);
     }

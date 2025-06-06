@@ -9,8 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Galaxy extends JPanel {
-    private SolarSystem solarSystem;
-    private Sun sun;
+    private PlanetarySystem planetarySystem;
+    private Star sun;
 
     // Constants
     static private final int sunRadius = 35;
@@ -19,9 +19,9 @@ public class Galaxy extends JPanel {
     private final double deltaTime = 60 * 60 * 24; // 1 dia em segundos
 
 
-    public Galaxy(SolarSystem solarSystem) {
-        this.solarSystem = solarSystem;
-        this.sun = (Sun) solarSystem.getBodies().get(0);
+    public Galaxy(PlanetarySystem planetarySystem) {
+        this.planetarySystem = planetarySystem;
+        this.sun = planetarySystem.getStar();
         setBackground(Color.BLACK);
 
         // Timer de atualização a cada 33ms (~30 FPS)
@@ -36,12 +36,10 @@ public class Galaxy extends JPanel {
     }
 
     private void updatePhysics() {
-        for (CelestialBody body : solarSystem.getBodies()) {
-            if (body instanceof Planet) {
-                Planet planet = (Planet) body;
-                Vector2D force = Physics.gravitationalForce(planet, sun);
-                Physics.updateBody(planet, force, deltaTime);
-            }
+        for (Planet planet : planetarySystem.getPlanets()) {
+            Vector2D force = Physics.gravitationalForce(planet, sun);
+            Physics.updateBody(planet, force, deltaTime);
+            
         }
     }
 
@@ -50,36 +48,33 @@ public class Galaxy extends JPanel {
         super.paintComponent(g);
         
         g.translate(galaxyCenterX, galaxyCenterY);
-        g.setColor(Color.YELLOW);
+        g.setColor(sun.getColor());
 
         g.fillOval(-sunRadius, -sunRadius, sunRadius, sunRadius);
 
-        for (CelestialBody body : solarSystem.getBodies()) {
+        for (Planet body : planetarySystem.getPlanets()) {
+            Vector2D pos = body.getPosition();
+            Vector2D relativePos = pos.sub(sun.getPosition());
+
+            double distReal = relativePos.magnitude();
+            double distVisual = Math.sqrt(distReal);
+
+            Vector2D direction = relativePos.normalize();
+            Vector2D posVisual = direction.multiply(distVisual);
+
+            double scale = 2.5e-4; // Ajuste para caber na tela
+
+            int x = (int) (posVisual.getX() * scale);
+            int y = (int) (posVisual.getY() * scale);
+    
             if (body instanceof Planet) {
-                Vector2D pos = body.getPosition();
-                Vector2D relativePos = pos.sub(sun.getPosition());
-    
-                double distReal = relativePos.magnitude();
-                double distVisual = Math.sqrt(distReal);
-    
-                Vector2D direction = relativePos.normalize();
-                Vector2D posVisual = direction.multiply(distVisual);
-    
-                double scale = 2.5e-4; // Ajuste para caber na tela
-    
-                int x = (int) (posVisual.getX() * scale);
-                int y = (int) (posVisual.getY() * scale);
-    
-                if (body instanceof Planet) {
-                    g.setColor(((Planet) body).getColor());
-                } else {
-                    g.setColor(Color.WHITE);
-                }
+                g.setColor(body.getColor());
+            } else {
+                g.setColor(Color.WHITE);
+            }
     
                 g.fillOval(x - 5, y - 5, 8, 8);
             }
         }
         
-    }
-
     }
