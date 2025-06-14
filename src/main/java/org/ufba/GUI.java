@@ -1,8 +1,5 @@
 package org.ufba;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -34,7 +31,7 @@ public class GUI extends JPanel {
                         isRunning = !isRunning;
                         break;
                     case "slow":
-                        deltaTime = Math.max(deltaTime / 2, 1); // limite inferior
+                        deltaTime = Math.max(deltaTime / 2, 1); 
                         break;
                     case "speed":
                         deltaTime *= 2;

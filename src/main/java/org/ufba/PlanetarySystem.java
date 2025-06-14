@@ -17,16 +17,16 @@ public class PlanetarySystem {
     }
 
     public List<Planet> getPlanets() {
-        return new ArrayList<>(planets); // Retorna uma cópia para evitar modificações externas
+        return new ArrayList<>(planets); 
     }
 
     public Star getStar() {
-        return new Star(sun); // Retorna uma cópia do Sol
+        return new Star(sun); 
     }
 
     public void update(double deltaTime) {
         for (Planet planet : planets) {
-            Vector2D force = Physics.gravitationalForce(planet, sun); // Corrigido de 'star' para 'sun'
+            Vector2D force = Physics.gravitationalForce(planet, sun); 
             Physics.updateBody(planet, force, deltaTime);
         }
     }
