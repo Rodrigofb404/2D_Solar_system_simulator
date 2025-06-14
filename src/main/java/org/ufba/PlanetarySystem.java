@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlanetarySystem {
-    private List<Planet> planets; // DECLARAR COMO CELESTIAL BODY PARA PODER ADICIONAR TANTO O SOL COMO PLANETAS
+    private List<Planet> planets;
     private Star sun;
 
     public PlanetarySystem(Star sun) {
-        planets = new ArrayList<>();
-        this.sun = sun; 
+        this.sun = sun;
+        this.planets = new ArrayList<>();
     }
 
     public void addBody(Planet planet) {
@@ -17,10 +17,17 @@ public class PlanetarySystem {
     }
 
     public List<Planet> getPlanets() {
-        return new ArrayList<>(planets); // return a copy
+        return new ArrayList<>(planets); // Retorna uma cópia para evitar modificações externas
     }
 
     public Star getStar() {
-        return new Star(sun);
+        return new Star(sun); // Retorna uma cópia do Sol
+    }
+
+    public void update(double deltaTime) {
+        for (Planet planet : planets) {
+            Vector2D force = Physics.gravitationalForce(planet, sun); // Corrigido de 'star' para 'sun'
+            Physics.updateBody(planet, force, deltaTime);
+        }
     }
 }
