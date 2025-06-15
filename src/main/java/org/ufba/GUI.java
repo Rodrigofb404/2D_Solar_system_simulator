@@ -8,12 +8,21 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class GUI extends JPanel {
-    static private double galaxyCenterX, galaxyCenterY;
+    // Swing variabels
     private JFrame frame;
-    private double deltaTime = 10000; // valor inicial (em segundos fictícios)
     private Timer timer;
-    private boolean isRunning = true; // Flag para controle de pausa/play
 
+    // Simulation Speed variables
+    private final int BASE_SIMULATION_TIME = 60 * 60 * 24;
+    private final double[] SPEED_LEVELS = {0.33, 0.5, 1.0, 2.0, 3.0};
+    private double deltaTime = BASE_SIMULATION_TIME; // Initial value
+    private int speedLevel = 2;
+    private boolean isRunning = true; // pause/play flag control
+
+    // Frame translation variables
+    static private double galaxyCenterX, galaxyCenterY;
+
+    
     public GUI(PlanetarySystem planetarySystem) {
         configFrame();
         calcFrameParameters();
@@ -31,10 +40,16 @@ public class GUI extends JPanel {
                         isRunning = !isRunning;
                         break;
                     case "slow":
-                        deltaTime = Math.max(deltaTime / 2, 1); 
+                        if (speedLevel >= 0) {
+                            speedLevel--;
+                            deltaTime = BASE_SIMULATION_TIME * SPEED_LEVELS[speedLevel];
+                        }
                         break;
-                    case "speed":
-                        deltaTime *= 2;
+                        case "speed":
+                        if (speedLevel < SPEED_LEVELS.length - 1) {
+                            speedLevel++;
+                            deltaTime = BASE_SIMULATION_TIME * SPEED_LEVELS[speedLevel];
+                        }    
                         break;
                 }
             }
@@ -42,18 +57,20 @@ public class GUI extends JPanel {
 
         Galaxy galaxy = new Galaxy(planetarySystem);
 
-        frame.add(galaxy, java.awt.BorderLayout.CENTER);   // Simulação no centro
-        frame.add(control, java.awt.BorderLayout.SOUTH);    // Botões na parte inferior
+        frame.add(galaxy);
+        frame.add(control, java.awt.BorderLayout.SOUTH);    // Positions buttons in the bottom of the frame
 
-        timer = new Timer(20, e -> {
+        // ~60 FPS
+        timer = new Timer(17, e -> {
             planetarySystem.update(deltaTime);
             galaxy.repaint();
         });
+
         timer.start();
     }
 
     // Configura o estado inicial da janela
-    public void configFrame() {
+    private void configFrame() {
         frame = new JFrame("2D Solar System Simulator");
         frame.setLayout(new java.awt.BorderLayout());
         frame.setSize(1150, 650);
@@ -62,7 +79,7 @@ public class GUI extends JPanel {
     }
 
     // Calcula as coordenadas do centro da galáxia
-    public void calcFrameParameters() {
+    private void calcFrameParameters() {
         int frameWidth = frame.getWidth();
         int frameHeight = frame.getHeight();
 
