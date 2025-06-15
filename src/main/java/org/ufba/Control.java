@@ -8,10 +8,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-/* No momento este painel está sendo adicionado ao painel "Galaxy" pq não está funcionando no frame.
-   Mas acredito que adicionar direto ao frame pode ser melhor, uma vez que não precisaria mudar o layout
-   do resto*/ 
-
 public class Control extends JPanel {
     public Control(ActionListener controlListener) {
         JButton slowBtn = new JButton("➖");

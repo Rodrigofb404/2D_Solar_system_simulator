@@ -22,12 +22,14 @@ public class GUI extends JPanel {
     // Frame translation variables
     static private double galaxyCenterX, galaxyCenterY;
 
-    
+    static private Control control;
+    static private Galaxy galaxy;
+
     public GUI(PlanetarySystem planetarySystem) {
         configFrame();
         calcFrameParameters();
 
-        Control control = new Control(new ActionListener() {
+        control = new Control(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 switch (e.getActionCommand()) {
@@ -54,13 +56,16 @@ public class GUI extends JPanel {
                 }
             }
         });
-
-        Galaxy galaxy = new Galaxy(planetarySystem);
+        galaxy = new Galaxy(planetarySystem);
 
         frame.add(galaxy);
         frame.add(control, java.awt.BorderLayout.SOUTH);    // Positions buttons in the bottom of the frame
 
         // ~60 FPS
+        startTimer(planetarySystem);        
+    }
+
+    private void startTimer(PlanetarySystem planetarySystem) {
         timer = new Timer(17, e -> {
             planetarySystem.update(deltaTime);
             galaxy.repaint();
@@ -69,16 +74,16 @@ public class GUI extends JPanel {
         timer.start();
     }
 
-    // Configura o estado inicial da janela
+    // Configures initial frame state
     private void configFrame() {
         frame = new JFrame("2D Solar System Simulator");
-        frame.setLayout(new java.awt.BorderLayout());
+        frame.setLayout(new java.awt.BorderLayout()); // Define layout
         frame.setSize(1150, 650);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null); // Centraliza na tela
+        frame.setLocationRelativeTo(null); // Centers the frame on the screen
     }
 
-    // Calcula as coordenadas do centro da galáxia
+    // Calculates coordinates for translation
     private void calcFrameParameters() {
         int frameWidth = frame.getWidth();
         int frameHeight = frame.getHeight();
@@ -87,12 +92,12 @@ public class GUI extends JPanel {
         galaxyCenterY = frameHeight / 2;
     }
 
-    // Exibe a GUI na tela
+    // Shows GUI
     public void openGUI() {
         frame.setVisible(true);
     }
-
-    // Retorna o centro da galáxia como vetor 2D
+    
+    // GalaxyCenter coordinates getter
     static public Vector2D getGalaxyCenter() {
         return new Vector2D(galaxyCenterX, galaxyCenterY);
     }
