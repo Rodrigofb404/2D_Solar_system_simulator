@@ -26,7 +26,7 @@ public class Star extends CelestialBody {
         return color; // Color is an enum, so it's imutable once defined
     }
 
-    public void defineStarColor() {
+    private void defineStarColor() {
         if (temperature >= 10000) {
             // Very hot stars
             color = new Color(135, 206, 250); // Blue star
