@@ -1,49 +1,67 @@
-        // TODO 1: trocar pelo celestial body ou tornar essa o celestial body
-        //OK! TODO 2: Verificar como utilizar o TIMER do Java Swing (ele provavelmente será o responsável por atualizar a tela) 
-        // TODO 3: Definir quais parâmetros poderão ser alterados no simulador (Acho que vi algo parecido na internet, dá para usar de inspiração)
-        // TODO 4: ("Opcional"): Se os parâmetros mudarem, decidir como será feita a seleção de qual planeta receberá as mudanças
-        // TODO 5: Se confirmar o uso do TIMER, descobrir como aplicar a física aos planetas e ligar isso à taxa de atualização do TIMER 
-        //OK! ANALISAR: Talvez trocar o vetor de posição para 2 variáveis escalares individuais de posição (x e y) seja mais simples do que lidar com o vetor.
-
 package org.ufba;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 public class GUI extends JPanel {
     static private double galaxyCenterX, galaxyCenterY;
     private JFrame frame;
+    private double deltaTime = 10000; // valor inicial (em segundos fictícios)
+    private Timer timer;
+    private boolean isRunning = true; // Flag para controle de pausa/play
 
     public GUI(PlanetarySystem planetarySystem) {
         configFrame();
         calcFrameParameters();
-        Control control = new Control();
+
+        Control control = new Control(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switch (e.getActionCommand()) {
+                    case "pause":
+                        if (isRunning) {
+                            timer.stop();
+                        } else {
+                            timer.start();
+                        }
+                        isRunning = !isRunning;
+                        break;
+                    case "slow":
+                        deltaTime = Math.max(deltaTime / 2, 1); 
+                        break;
+                    case "speed":
+                        deltaTime *= 2;
+                        break;
+                }
+            }
+        });
+
         Galaxy galaxy = new Galaxy(planetarySystem);
-        galaxy.add(control);
-        frame.add(galaxy);
+
+        frame.add(galaxy, java.awt.BorderLayout.CENTER);   // Simulação no centro
+        frame.add(control, java.awt.BorderLayout.SOUTH);    // Botões na parte inferior
+
+        timer = new Timer(20, e -> {
+            planetarySystem.update(deltaTime);
+            galaxy.repaint();
+        });
+        timer.start();
     }
 
-    // Configures the frame's initial state
+    // Configura o estado inicial da janela
     public void configFrame() {
         frame = new JFrame("2D Solar System Simulator");
-        // frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setLayout(new java.awt.BorderLayout());
         frame.setSize(1150, 650);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLocationRelativeTo(null); // Initialize the frame centralized on the screen
-
+        frame.setLocationRelativeTo(null); // Centraliza na tela
     }
-    
-    // Calculates useful frame's parameters
+
+    // Calcula as coordenadas do centro da galáxia
     public void calcFrameParameters() {
         int frameWidth = frame.getWidth();
         int frameHeight = frame.getHeight();
@@ -52,15 +70,13 @@ public class GUI extends JPanel {
         galaxyCenterY = frameHeight / 2;
     }
 
-    // Shows the GUI on screen
+    // Exibe a GUI na tela
     public void openGUI() {
         frame.setVisible(true);
     }
 
-    // Gets the galaxy center coordinates
+    // Retorna o centro da galáxia como vetor 2D
     static public Vector2D getGalaxyCenter() {
-        Vector2D galaxyCenter = new Vector2D(galaxyCenterX, galaxyCenterY);
-
-        return galaxyCenter; 
+        return new Vector2D(galaxyCenterX, galaxyCenterY);
     }
 }

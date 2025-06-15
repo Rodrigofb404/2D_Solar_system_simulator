@@ -2,11 +2,8 @@ package org.ufba;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
-import javax.swing.Timer;
 
 public class Galaxy extends JPanel {
     private PlanetarySystem planetarySystem;
@@ -16,31 +13,12 @@ public class Galaxy extends JPanel {
     static private final int sunRadius = 35;
     private final int galaxyCenterX = (int) (GUI.getGalaxyCenter().getX());
     private final int galaxyCenterY = (int) (GUI.getGalaxyCenter().getY());
-    private final double deltaTime = 60 * 60 * 24; // 1 day in seconds
 
 
     public Galaxy(PlanetarySystem planetarySystem) {
         this.planetarySystem = planetarySystem;
         this.sun = planetarySystem.getStar();
         setBackground(Color.BLACK);
-
-        // Update time each 33ms (~30 FPS)
-        Timer timer = new Timer(33, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                updatePhysics(); // Update positions
-                repaint();       
-            }
-        });
-        timer.start();
-    }
-
-    private void updatePhysics() {
-        for (Planet planet : planetarySystem.getPlanets()) {
-            Vector2D force = Physics.gravitationalForce(planet, sun);
-            Physics.updateBody(planet, force, deltaTime);
-            
-        }
     }
 
     @Override
