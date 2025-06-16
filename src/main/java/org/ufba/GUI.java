@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class GUI extends JPanel {
-    // Swing variabels
+    // Swing variables
     private JFrame frame;
     private Timer timer;
 
