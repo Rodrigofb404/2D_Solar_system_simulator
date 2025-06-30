@@ -1,7 +1,5 @@
 package org.ufba;
 
-import java.awt.Color;
-
 public class CelestialBody {
     String name;
     private double mass;
