@@ -6,15 +6,16 @@ This project is a 2D simulator of our solar system, developed in Java. It demons
 
 The simulator presents a simple graphical interface where it is possible to view the Sun and the planets of our solar system. The simulation calculates and updates the positions of the planets in real-time, based on their masses, velocities, and the gravitational force exerted by the Sun.
 
-## Units
+## Units of Measurement
 
-This projects is using the SI Units.
+The simulation uses the International System of Units (SI) for most of its internal physics calculations to maintain consistency with scientific standards.
 
-* Velocity [m/s]
-* Accelaration [m^2/s]
-* Mass [M]
-* Force [N]
-* Position [m]
+* **Mass**: Measured in kilograms (kg).
+* **Distance/Position**: Measured in meters (m). The initial positions of the planets are set using their real-world distance from the sun in meters (multiplied by a scale to fit on the screen).
+* **Velocity**: Measured in meters per second (m/s).
+* **Temperature**: The temperature of a star is measured in Kelvin (K).
+* **Gravitational Constant (G)**: The value is `6.67e-11` $m^3 kg^{-1} s^{-2}$.
+* **Time Step (`deltaTime`)**: The base time step for the simulation is calculated in seconds (s). The `BASE_SIMULATION_TIME` constant is set to `60 * 60 * 24` seconds, representing one day.
 
 ## Features
 
