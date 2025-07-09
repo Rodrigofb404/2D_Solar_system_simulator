@@ -42,8 +42,8 @@ The source code is divided into the following Java classes:
 
 The graphical interface offers the following controls at the bottom of the screen:
 
-* **`➖`**: Slows down the simulation speed.
-* **`➕`**: Increases the simulation speed.
+* **`-`**: Slows down the simulation speed.
+* **`+`**: Increases the simulation speed.
 * **`⏸/▶`**: Pauses or resumes the simulation.
 
 ## Troubleshooting
