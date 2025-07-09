@@ -13,7 +13,7 @@ public class GUI extends JPanel {
     private Timer timer;
 
     // Simulation Speed variables
-    private final int BASE_SIMULATION_TIME = 60 * 60 * 24;
+    private final int BASE_SIMULATION_TIME = 60 * 60 * 24; // One day each 17ms
     private final double[] SPEED_LEVELS = {0.33, 0.5, 1.0, 2.0, 3.0};
     private double deltaTime = BASE_SIMULATION_TIME; // Initial value
     private int speedLevel = 2;
@@ -22,14 +22,18 @@ public class GUI extends JPanel {
     // Frame translation variables
     static private double galaxyCenterX, galaxyCenterY;
 
-    static private Control control;
-    static private Galaxy galaxy;
+    // JPanel variables
+    private Control control;
+    private Galaxy galaxy;
 
     public GUI(PlanetarySystem planetarySystem) {
         configFrame();
         calcFrameParameters();
-
+            
         control = new Control(new ActionListener() {
+
+            // Define the buttons behavior
+            // Limits the min and max speed of the simulation. High speeds may cause bugs.
             @Override
             public void actionPerformed(ActionEvent e) {
                 switch (e.getActionCommand()) {
@@ -56,6 +60,8 @@ public class GUI extends JPanel {
                 }
             }
         });
+
+        // Instantiates Panel
         galaxy = new Galaxy(planetarySystem);
 
         frame.add(galaxy);
@@ -65,6 +71,7 @@ public class GUI extends JPanel {
         startTimer(planetarySystem);        
     }
 
+    // Start the timer who will call the 'update' and 'repaint' functions each 17ms
     private void startTimer(PlanetarySystem planetarySystem) {
         timer = new Timer(17, e -> {
             planetarySystem.update(deltaTime);

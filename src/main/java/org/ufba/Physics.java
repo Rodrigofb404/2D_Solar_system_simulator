@@ -30,6 +30,7 @@ public class Physics {
         Vector2D newVelocity = body.getVelocity().add(newAcceleration.multiply(deltaTime));
         Vector2D newPosition = body.getPosition().add(newVelocity.multiply(deltaTime));
 
+        // Set new values
         body.setAcceleration(newAcceleration);
         body.setVelocity(newVelocity);
         body.setPosition(newPosition);

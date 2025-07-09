@@ -14,13 +14,13 @@ public class Galaxy extends JPanel {
     private final int galaxyCenterX = (int) (GUI.getGalaxyCenter().getX());
     private final int galaxyCenterY = (int) (GUI.getGalaxyCenter().getY());
 
-
+    // Constructor
     public Galaxy(PlanetarySystem planetarySystem) {
         this.planetarySystem = planetarySystem;
         this.sun = planetarySystem.getStar();
         setBackground(Color.BLACK);
     }
-
+    
     private void drawPlanetarySystem(Graphics g) {
         for (Planet body : planetarySystem.getPlanets()) {
             Vector2D pos = body.getPosition();
@@ -44,7 +44,6 @@ public class Galaxy extends JPanel {
             g.fillOval(x - 20, y - 20, 10, 10);
             }
         }
-
 
     @Override
     protected void paintComponent(Graphics g) {
